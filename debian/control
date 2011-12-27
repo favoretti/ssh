@@ -1,0 +1,23 @@
+Source: python-ssh
+Section: net
+Priority: optional
+Maintainer: Vladimir Lazarenko <favoretti@gmail.com>
+Build-Depends: debhelper (>= 7.0.15~)
+Build-Depends-Indep: python-support, python-setuptools
+Standards-Version: 3.9.1
+Homepage: http://fabfile.org/
+
+Package: python-ssh
+Architecture: all
+Depends: ${misc:Depends}, ${python:Depends}, python-pkg-resources
+Description: Python SSH module
+ "ssh" is a module for python 2.2+ that implements the SSH2 protocol
+ for secure (encrypted and authenticated) connections to remote machines.
+ unlike SSL (aka TLS), SSH2 protocol does not require hierarchical
+ certificates signed by a powerful central authority. you may know SSH2 as
+ the protocol that replaced telnet and rsh for secure access to remote
+ shells, but the protocol also includes the ability to open arbitrary
+ channels to remote services across the encrypted tunnel (this is how sftp
+ works, for example).
+ It is written entirely in python (no C or platform-dependent code) and is
+ released under the GNU LGPL (lesser GPL). 

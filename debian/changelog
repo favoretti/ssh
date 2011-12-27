@@ -1,0 +1,5 @@
+python-ssh (1.7.13) unstable; urgency=low
+
+  * Initial release. (Closes: #504799)
+
+ -- Vladimir Lazarenko <favoretti@gmail.com>  Tue, 14 Feb 2012 03:29:25 +0000
