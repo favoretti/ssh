@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU Lesser General Public License
 # along with 'ssh'; if not, write to the Free Software Foundation, Inc.,
-# 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+# 51 Franklin Street, Suite 500, Boston, MA  02110-1335  USA.
 
 
 longdesc = '''
@@ -45,12 +45,12 @@ except ImportError:
     kw = {}
 
 if sys.platform == 'darwin':
-	import setup_helper
-	setup_helper.install_custom_make_tarball()
+    import setup_helper
+    setup_helper.install_custom_make_tarball()
 
 
 setup(name = "ssh",
-      version = "1.7.12",
+      version = "1.7.14",
       description = "SSH2 protocol library",
       author = "Jeff Forcier",
       author_email = "jeff@bitprophet.org",

@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU Lesser General Public License
 # along with 'ssh'; if not, write to the Free Software Foundation, Inc.,
-# 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+# 51 Franklin Street, Suite 500, Boston, MA  02110-1335  USA.
 
 """
 Client-mode SFTP support.
@@ -641,13 +641,13 @@ class SFTPClient (BaseSFTP):
             msg = Message()
             msg.add_int(self.request_number)
             for item in arg:
-                if type(item) is int:
+                if isinstance(item, int):
                     msg.add_int(item)
-                elif type(item) is long:
+                elif isinstance(item, long):
                     msg.add_int64(item)
-                elif type(item) is str:
+                elif isinstance(item, str):
                     msg.add_string(item)
-                elif type(item) is SFTPAttributes:
+                elif isinstance(item, SFTPAttributes):
                     item._pack(msg)
                 else:
                     raise Exception('unknown type for %r type %r' % (item, type(item)))

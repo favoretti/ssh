@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU Lesser General Public License
 # along with 'ssh'; if not, write to the Free Software Foundation, Inc.,
-# 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+# 51 Franklin Street, Suite 500, Boston, MA  02110-1335  USA.
 
 """
 I{'ssh'} 
@@ -55,7 +55,7 @@ if sys.version_info < (2, 2):
 
 
 __author__ = "Jeff Forcier <jeff@bitprophet.org>"
-__version__ = "1.7.12"
+__version__ = "1.7.14"
 __license__ = "GNU Lesser General Public License (LGPL)"
 
 

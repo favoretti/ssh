@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU Lesser General Public License
 # along with 'ssh'; if not, write to the Free Software Foundation, Inc.,
-# 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+# 51 Franklin Street, Suite 500, Boston, MA  02110-1335  USA.
 
 """
 SSH Agent interface for Unix clients.
@@ -186,10 +186,11 @@ class AgentClientProxy(object):
        the remote fake agent and the local agent
        -> Communication occurs ...
     """
-    def __init__(self, chanClient):
+    def __init__(self, chanRemote):
         self._conn = None
-        self.__chanC = chanClient
-        chanClient.request_forward_agent(self._forward_agent_handler)
+        self.__chanR = chanRemote
+        self.thread = AgentRemoteProxy(self, chanRemote)
+        self.thread.start()
 
     def __del__(self):
         self.close()
@@ -226,10 +227,6 @@ class AgentClientProxy(object):
             self.thread.join(1000)
         if self._conn is not None:
             self._conn.close()
-
-    def _forward_agent_handler(self, chanRemote):
-        self.thread = AgentRemoteProxy(self, chanRemote)
-        self.thread.start()
 
 class AgentServerProxy(AgentSSH):
     """
@@ -280,6 +277,23 @@ class AgentServerProxy(AgentSSH):
 
     def _get_filename(self):
         return self._file
+
+class AgentRequestHandler(object):
+    def __init__(self, chanClient):
+        self._conn = None
+        self.__chanC = chanClient
+        chanClient.request_forward_agent(self._forward_agent_handler)
+        self.__clientProxys = []
+
+    def _forward_agent_handler(self, chanRemote):
+        self.__clientProxys.append(AgentClientProxy(chanRemote))
+
+    def __del__(self):
+        self.close()
+
+    def close(self):
+        for p in self.__clientProxys:
+            p.close()
 
 class Agent(AgentSSH):
     """

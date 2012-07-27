@@ -1,6 +1,33 @@
 Temporary, post-Paramiko changelog while we get our sh!t together.
 
-## ssh 1.7.13 (2012-MM-DD)
+## ssh 1.7.15 (2012-MM-DD)
+
+* Ported over https://github.com/paramiko/paramiko/pull/63. Thanks to Dwayne
+  Litzenberger for catch & patch.
+* #32: Raise a more useful error explaining which `known_hosts` key line was
+  problematic, when encountering `binascii` issues decoding known host keys.
+  Thanks to `@thomasvs` for catch & patch.
+* #33: Bring `ssh_config` parsing more in line with OpenSSH spec, re: order of
+  setting overrides by `Host` specifiers. Specifically, the overrides now go by
+  file order instead of automatically sorting by `Host` value length. In
+  addition, the first value found per config key (e.g. `Port`, `User` etc)
+  wins, instead of the last. Thanks to Jan Brauer for the contribution.
+
+## ssh 1.7.14 (2012-05-07)
+
+* #15: Implemented parameter substitution in SSHConfig, matching the
+  implementation of `ssh_config(5)`. Thanks to Olle Lundberg for the patch.
+* #24: Switch some internal type checking to use `isinstance` to help prevent
+  problems with client libraries using subclasses of builtin types. Thanks to
+  Alex Morega for the patch.
+* [Fabric #562](https://github.com/fabric/fabric/issues/562): Agent forwarding
+  would error out (with `Authentication response too long`) or freeze, when more
+  than one remote connection to the local agent was active at the same time.
+  This has been fixed. Thanks to Steven McDonald for assisting in
+  troubleshooting/patching, and to GitHub user `@lynxis` for providing the
+  final version of the patch.
+
+## ssh 1.7.13 (2012-02-13)
 
 * #5: Moved a `fcntl` import closer to where it's used to help avoid
   `ImportError` problems on Windows platforms. Thanks to Jason Coombs for the

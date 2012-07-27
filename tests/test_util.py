@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU Lesser General Public License
 # along with 'ssh'; if not, write to the Free Software Foundation, Inc.,
-# 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+# 51 Franklin Street, Suite 500, Boston, MA  02110-1335  USA.
 
 """
 Some unit tests for utility functions.
@@ -120,12 +120,19 @@ class UtilTest (unittest.TestCase):
         global test_config_file
         f = cStringIO.StringIO(test_config_file)
         config = ssh.util.parse_ssh_config(f)
-        c = ssh.util.lookup_ssh_host_config('irc.danger.com', config)
-        self.assertEquals(c, {'identityfile': '~/.ssh/id_rsa', 'user': 'robey', 'crazy': 'something dumb  '})
-        c = ssh.util.lookup_ssh_host_config('irc.example.com', config)
-        self.assertEquals(c, {'identityfile': '~/.ssh/id_rsa', 'user': 'bjork', 'crazy': 'something dumb  ', 'port': '3333'})
-        c = ssh.util.lookup_ssh_host_config('spoo.example.com', config)
-        self.assertEquals(c, {'identityfile': '~/.ssh/id_rsa', 'user': 'bjork', 'crazy': 'something else', 'port': '3333'})
+        for host, values in {
+            'irc.danger.com': {'user': 'robey', 'crazy': 'something dumb  '},
+            'irc.example.com': {'user': 'bjork', 'crazy': 'something dumb  ', 'port': '3333'},
+            'spoo.example.com': {'user': 'bjork', 'crazy': 'something else', 'port': '3333'}
+        }.items():
+            values = dict(values,
+                hostname=host,
+                identityfile=os.path.expanduser("~/.ssh/id_rsa")
+            )
+            self.assertEquals(
+                ssh.util.lookup_ssh_host_config(host, config),
+                values
+            )
 
     def test_4_generate_key_bytes(self):
         x = ssh.util.generate_key_bytes(SHA, 'ABCDEFGH', 'This is my secret passphrase.', 64)
@@ -152,3 +159,21 @@ class UtilTest (unittest.TestCase):
         x = rng.read(32)
         self.assertEquals(len(x), 32)
         
+    def test_7_host_config_expose_issue_33(self):
+        test_config_file = """
+Host www13.*
+    Port 22
+
+Host *.example.com
+    Port 2222
+
+Host *
+    Port 3333
+    """
+        f = cStringIO.StringIO(test_config_file)
+        config = ssh.util.parse_ssh_config(f)
+        host = 'www13.example.com'
+        self.assertEquals(
+            ssh.util.lookup_ssh_host_config(host, config),
+            {'hostname': host, 'port': '22'}
+        )

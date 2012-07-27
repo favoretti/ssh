@@ -14,19 +14,28 @@
 #
 # You should have received a copy of the GNU Lesser General Public License
 # along with 'ssh'; if not, write to the Free Software Foundation, Inc.,
-# 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+# 51 Franklin Street, Suite 500, Boston, MA  02110-1335  USA.
 
 """
 L{HostKeys}
 """
 
 import base64
+import binascii
 from Crypto.Hash import SHA, HMAC
 import UserDict
 
 from ssh.common import *
 from ssh.dsskey import DSSKey
 from ssh.rsakey import RSAKey
+
+
+class InvalidHostKey(Exception):
+
+    def __init__(self, line, exc):
+        self.line = line
+        self.exc = exc
+        self.args = (line, exc)
 
 
 class HostKeyEntry:
@@ -63,12 +72,15 @@ class HostKeyEntry:
 
         # Decide what kind of key we're looking at and create an object
         # to hold it accordingly.
-        if keytype == 'ssh-rsa':
-            key = RSAKey(data=base64.decodestring(key))
-        elif keytype == 'ssh-dss':
-            key = DSSKey(data=base64.decodestring(key))
-        else:
-            return None
+        try:
+            if keytype == 'ssh-rsa':
+                key = RSAKey(data=base64.decodestring(key))
+            elif keytype == 'ssh-dss':
+                key = DSSKey(data=base64.decodestring(key))
+            else:
+                return None
+        except binascii.Error, e:
+            raise InvalidHostKey(line, e)
 
         return cls(names, key)
     from_line = classmethod(from_line)

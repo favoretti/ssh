@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU Lesser General Public License
 # along with 'ssh'; if not, write to the Free Software Foundation, Inc.,
-# 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+# 51 Franklin Street, Suite 500, Boston, MA  02110-1335  USA.
 
 """
 ...
@@ -62,12 +62,8 @@ class LoopSocket (object):
                 self.__cv.wait(self.__timeout)
             if len(self.__in_buffer) == 0:
                 raise socket.timeout
-            if n < self.__in_buffer:
-                out = self.__in_buffer[:n]
-                self.__in_buffer = self.__in_buffer[n:]
-            else:
-                out = self.__in_buffer
-                self.__in_buffer = ''
+            out = self.__in_buffer[:n]
+            self.__in_buffer = self.__in_buffer[n:]
             return out
         finally:
             self.__lock.release()
